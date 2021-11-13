@@ -1,10 +1,12 @@
 #include "const.h"
-const int N = 1;
-const double BETA1 = 0;
-const double BETA2 = 1;
-const double MU1 = 0;
-const double MU2 = 0;
-const double EPS = 0.01;
+int N = 100;
+double BETA1 = 0;
+double BETA2 = 1;
+double MU1 = 0;
+double MU2 = 0;
+double EPS = 0.01;
+double X1 = 0;
+double X2 = 1;
 
 double k(double x) {
     return exp(x);

@@ -1,4 +1,4 @@
-CFLAGS :=
+CFLAGS := -Wall -Werror -lasan
 INCLUDE:= -I./include
 SRC  := ./source
 BIN  := ./include
@@ -19,3 +19,4 @@ $(EXEC): $(OBJ)
 	g++ -c $(CFLAGS) $(INCLUDE) $< -o $@
 	
 clean:
+	rm -r bin
