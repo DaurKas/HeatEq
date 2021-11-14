@@ -2,17 +2,13 @@
 #include "linSys.h"
 
 int main() {
-    vector<double> f;
-    vector<double> y;
-    vector<vector<double>> A = getMatrix(f);
-    int len = f.size();
-    printVector(f);
-    cout << endl;
-    printMatrix(A);
-    y = sweepMethod(A, f, len);
-    printVector(y);
-    cout << endl;
-    Grid grid(0, 1, 100);
-    printVector(grid.getGridPhi());
+    Grid grid(X1, X2, N);
+    LinSystem linSys(grid);
+    printMatrix(linSys.getMatrix());
+    printVector(linSys.getU());
+    cout << "k(0.5) = " << k(0) << endl;
+    cout << "q(0.5) = " << q(0) << endl;
+    cout << "f(0.5) = " << f(0) << endl;
+    linSys.compareSolutions();
     return 0;
 }

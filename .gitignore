@@ -1,6 +1,6 @@
 # Prerequisites
 *.d
-
+*.pub
 # Compiled Object files
 *.slo
 *.lo
@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+key1
+main
+*.txt

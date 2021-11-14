@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -26,4 +27,6 @@ double k(double x);
 double q(double x);
 
 double f(double x);
+
+double exampleSolution(double x);
 #endif

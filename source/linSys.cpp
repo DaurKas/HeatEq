@@ -1,5 +1,50 @@
 #include "linSys.h"
 
+LinSystem::LinSystem(Grid _grid) {
+    LinSystem::grid = _grid;
+    LinSystem::setMatrix();
+    LinSystem::solveSystem();
+}
+
+void LinSystem::setMatrix() {
+    vector<double> x = grid.getGridX();
+    vector<double> phi = grid.getGridPhi();
+    double h = grid.getH();
+    for (int i = 0; i < N; i++) {
+        matrix.push_back({ });
+        f.push_back(0);
+        for (int j = 0; j < N; j++) {
+            matrix[i].push_back(0);
+        }
+    }
+
+    matrix[0][0] = (-k(X1) - BETA1 * h);
+    matrix[0][1] = k(X1);
+    f[0] = -MU1 * h;
+    matrix[N - 1][N - 2] = k(X2);
+    matrix[N - 1][N - 1] = (-k(X2) - BETA2 * h);
+    f[N - 1] = -MU2 * h;
+
+    for (int i = 1; i < N - 1; i++) {
+        matrix[i][i - 1] = k(x[i]);
+        matrix[i][i] = (-k(x[i + 1]) - k(x[i]) - q(x[i]) * h * h);
+        matrix[i][i + 1] = k(x[i + 1]);
+        f[i] = -phi[i] * h * h;
+    }
+}
+
+void LinSystem::solveSystem() {
+    u = sweepMethod(LinSystem::matrix, LinSystem::f, N);
+}
+
+vector<vector<double>> LinSystem::getMatrix() {
+    return matrix;
+}
+
+vector<double> LinSystem::getU() {
+    return u;
+}
+
 vector<double> sweepMethod (vector<vector<double>> A, vector<double> F, int N) {
     double y;
     vector<double> a(N, 0);
@@ -20,23 +65,13 @@ vector<double> sweepMethod (vector<vector<double>> A, vector<double> F, int N) {
     return result;
 }
 
-vector<vector<double>> getMatrix(vector<double> & f) {
-    int N = 0;
-    double value = 0;
-    ifstream fin("input.txt");
-    fin >> N;
-    vector<vector<double>> A(N, vector<double> (N, 0));
+void LinSystem::compareSolutions() {
+    vector<double> example = grid.getExample();
+    vector<double> x = grid.getGridX();
+    cout << "X(i)" << setw(8) << "U(x)" << setw(8) << "~U(x)" << setw(8) << "delta" << endl;
     for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j ++) {
-            fin >> A[i][j];
-        }    
+        cout << x[i] << "    " << u[i] << "  " << example[i] << " " << abs(u[i] - example[i]) << endl;
     }
-    for (int i = 0; i < N; i++) {
-        fin >> value;
-        f.push_back(value);
-    }
-    fin.close();
-    return A;
 }
 
 void printVector(vector<double> vec) {

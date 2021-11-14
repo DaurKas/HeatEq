@@ -9,13 +9,20 @@ double X1 = 0;
 double X2 = 1;
 
 double k(double x) {
-    return exp(x);
+    return exp(0.5);
+    //return exp(x);
 }
 
 double q(double x) {
-    return exp(x);
+    return exp(0.5);
+    //return exp(x);
 }
 
 double f(double x) {
-    return sin(x);
+    return sin(0.5);
+    //return sin(x);
+}
+
+double exampleSolution(double x) {
+    return (-0.0418) * exp(x) + (-0.0418) * exp(-x) + 0.29079;
 }
