@@ -5,6 +5,7 @@ Grid::Grid(double x1, double x2, int n) {
     for (int i = 0; i <= n; i++) {
         gridX.push_back(x1 + i * h);
         gridPhi.push_back(f(x1 + i *h));
+        examplePhi.push_back(f(0.5));
         example.push_back(exampleSolution(x1 + i * h));
     }
     len = gridX.size();
@@ -26,4 +27,8 @@ vector<double> Grid::getExample() {
 
 double Grid::getH() {
     return h;
+}
+
+int Grid::getLen() {
+    return len;
 }

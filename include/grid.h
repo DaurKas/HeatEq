@@ -5,6 +5,7 @@
 class Grid {
     vector<double> gridX;
     vector<double> gridPhi;
+    vector<double> examplePhi;
     vector<double> example;
     double h;
     int len;
@@ -14,8 +15,10 @@ public:
     vector<double> getGridX();
     vector<double> getGridPhi();
     vector<double> getExample();
+    vector<double> getExamplePhi();
     double getH();
     double getEl(int i, int j);
+    int getLen();
 };
 
 #endif

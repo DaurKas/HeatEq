@@ -2,30 +2,48 @@
 
 LinSystem::LinSystem(Grid _grid) {
     LinSystem::grid = _grid;
-    LinSystem::setMatrix();
+    LinSystem::gridN = _grid.getLen();
+    LinSystem::calculateMatrix();
     LinSystem::solveSystem();
 }
 
-void LinSystem::setMatrix() {
+LinSystem::LinSystem() {
+
+}
+
+void LinSystem::calculateMatrix() {
     vector<double> x = grid.getGridX();
     vector<double> phi = grid.getGridPhi();
     double h = grid.getH();
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < gridN; i++) {
         matrix.push_back({ });
         f.push_back(0);
-        for (int j = 0; j < N; j++) {
+        for (int j = 0; j < gridN; j++) {
             matrix[i].push_back(0);
         }
     }
+    double betaUp1 = BETA1 + 0.5 * h * q(X1);
+    double betaUp2 = BETA2 + 0.5 * h * q(X2);
+    double muUp1 = MU1 - 0.5 * h * phi[0];
+    double muUp2 = MU2 - 0.5 * h * phi[gridN - 1];
+    double a1 = k(x[0]) * 0.5 + 0.5 * k(x[1]);
+    double aN = k(x[gridN - 2]) * 0.5 + k(x[gridN - 1]) * 0.5;
 
+    matrix[0][0] = -1 * (a1 + betaUp1 * h);
+    matrix[0][1] = a1;
+    f[0] = -muUp1 * h;
+    matrix[gridN - 1][gridN - 2] = aN;
+    matrix[gridN - 1][gridN - 1] = -1 * (aN + betaUp2 * h);
+    f[gridN - 1] = -1 * muUp2 * h;
+/*
     matrix[0][0] = (-k(X1) - BETA1 * h);
     matrix[0][1] = k(X1);
     f[0] = -MU1 * h;
-    matrix[N - 1][N - 2] = k(X2);
-    matrix[N - 1][N - 1] = (-k(X2) - BETA2 * h);
-    f[N - 1] = -MU2 * h;
-
-    for (int i = 1; i < N - 1; i++) {
+    matrix[gridN - 1][gridN - 2] = k(X2);
+    matrix[gridN - 1][gridN - 1] = (-k(X2) - BETA2 * h);
+    f[gridN - 1] = -MU2 * h;
+*/
+    for (int i = 1; i < gridN - 1; i++) {
         matrix[i][i - 1] = k(x[i]);
         matrix[i][i] = (-k(x[i + 1]) - k(x[i]) - q(x[i]) * h * h);
         matrix[i][i + 1] = k(x[i + 1]);
@@ -34,15 +52,7 @@ void LinSystem::setMatrix() {
 }
 
 void LinSystem::solveSystem() {
-    u = sweepMethod(LinSystem::matrix, LinSystem::f, N);
-}
-
-vector<vector<double>> LinSystem::getMatrix() {
-    return matrix;
-}
-
-vector<double> LinSystem::getU() {
-    return u;
+    u = sweepMethod(LinSystem::matrix, LinSystem::f, gridN);
 }
 
 vector<double> sweepMethod (vector<vector<double>> A, vector<double> F, int N) {
@@ -65,15 +75,56 @@ vector<double> sweepMethod (vector<vector<double>> A, vector<double> F, int N) {
     return result;
 }
 
-void LinSystem::compareSolutions() {
-    vector<double> example = grid.getExample();
+void compareSolutions(vector<double> v1, vector<double> v2, Grid grid) {
+    int n = grid.getLen();
     vector<double> x = grid.getGridX();
     cout << "X(i)" << setw(8) << "U(x)" << setw(8) << "~U(x)" << setw(8) << "delta" << endl;
-    for (int i = 0; i < N; i++) {
-        cout << x[i] << "    " << u[i] << "  " << example[i] << " " << abs(u[i] - example[i]) << endl;
+    for (int i = 0; i < n; i++) {
+        cout << x[i] << "    " << v1[i] << "  " << v2[i] << " " << abs(v1[i] - v2[i]) << endl;
     }
 }
+void LinSystem::setGridN(int _gridN) {
+    gridN = _gridN;
+}
+void LinSystem::setGrid(Grid _grid) {
+    grid = _grid;
 
+}
+void LinSystem::setF(vector<double> _f) {
+    f = _f;
+}
+void LinSystem::setU(vector<double> _u) {
+    u = _u;
+}
+void LinSystem::setMatrix(vector<vector<double>> _matrix) {
+    matrix = _matrix;
+}
+
+int LinSystem::getGridN() {
+    return gridN;
+}
+Grid LinSystem::getGrid() {
+    return grid;
+}
+ vector<double> LinSystem::getF() {
+     return f;
+}
+ vector<double> LinSystem::getU() {
+     return u;
+}
+ vector<vector<double>> LinSystem::getMatrix() {
+     return matrix;
+}
+vector<double> Grid::getExamplePhi() {
+    return examplePhi;
+}
+void LinSystem::printSolution() {
+    vector<double> x = grid.getGridX();
+    cout << "X_i    " << "U(x_i)" << endl;
+    for (int i = 0; i < gridN; i++) {
+        cout << x[i] << "    " << u[i] << endl;
+    }
+}
 void printVector(vector<double> vec) {
     for (auto i = vec.begin(); i != vec.end(); ++i)
         std::cout << *i << ' ';

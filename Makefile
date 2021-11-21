@@ -1,4 +1,4 @@
-CFLAGS := -Wall -Werror -lasan
+CFLAGS := -Wall -Werror
 INCLUDE:= -I./include
 SRC  := ./source
 BIN  := ./include
